@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT VERSION="8.0" FORMAT="PROTEUS">
+  <DESIGN>
+    <NAME>Full Adder Circuit</NAME>
+    <AUTHOR>Circuit Designer</AUTHOR>
+    <DATE>2024</DATE>
+    <REVISION>1.0</REVISION>
+    <DESCRIPTION>Digital Full Adder Circuit with inputs A, B, Ci and outputs CF (Carry Flag), OF (Output Flag/Sum)</DESCRIPTION>
+  </DESIGN>
+  
+  <SCHEMATIC>
+    <COMPONENTS>
+      <!-- Input Components -->
+      <COMPONENT ID="INPUT_A" TYPE="LOGICPROBE" LABEL="A">
+        <POSITION X="100" Y="200"/>
+        <PROPERTIES>
+          <PROPERTY NAME="STATE" VALUE="UNDEFINED"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <COMPONENT ID="INPUT_B" TYPE="LOGICPROBE" LABEL="B">
+        <POSITION X="100" Y="300"/>
+        <PROPERTIES>
+          <PROPERTY NAME="STATE" VALUE="UNDEFINED"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <COMPONENT ID="INPUT_CI" TYPE="LOGICPROBE" LABEL="Ci">
+        <POSITION X="100" Y="400"/>
+        <PROPERTIES>
+          <PROPERTY NAME="STATE" VALUE="UNDEFINED"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <!-- Logic Gates -->
+      <COMPONENT ID="XOR1" TYPE="XOR" LABEL="XOR1">
+        <POSITION X="300" Y="250"/>
+        <PROPERTIES>
+          <PROPERTY NAME="INPUTS" VALUE="2"/>
+          <PROPERTY NAME="FAMILY" VALUE="TTL"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <COMPONENT ID="XOR2" TYPE="XOR" LABEL="XOR2">
+        <POSITION X="700" Y="250"/>
+        <PROPERTIES>
+          <PROPERTY NAME="INPUTS" VALUE="2"/>
+          <PROPERTY NAME="FAMILY" VALUE="TTL"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <COMPONENT ID="AND1" TYPE="AND" LABEL="AND1">
+        <POSITION X="300" Y="350"/>
+        <PROPERTIES>
+          <PROPERTY NAME="INPUTS" VALUE="2"/>
+          <PROPERTY NAME="FAMILY" VALUE="TTL"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <COMPONENT ID="AND2" TYPE="AND" LABEL="AND2">
+        <POSITION X="500" Y="350"/>
+        <PROPERTIES>
+          <PROPERTY NAME="INPUTS" VALUE="2"/>
+          <PROPERTY NAME="FAMILY" VALUE="TTL"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <COMPONENT ID="OR1" TYPE="OR" LABEL="OR1">
+        <POSITION X="700" Y="350"/>
+        <PROPERTIES>
+          <PROPERTY NAME="INPUTS" VALUE="2"/>
+          <PROPERTY NAME="FAMILY" VALUE="TTL"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <!-- Output Components -->
+      <COMPONENT ID="OUTPUT_OF" TYPE="LOGICPROBE" LABEL="OF">
+        <POSITION X="900" Y="250"/>
+        <PROPERTIES>
+          <PROPERTY NAME="MODE" VALUE="OUTPUT"/>
+        </PROPERTIES>
+      </COMPONENT>
+      
+      <COMPONENT ID="OUTPUT_CF" TYPE="LOGICPROBE" LABEL="CF">
+        <POSITION X="900" Y="350"/>
+        <PROPERTIES>
+          <PROPERTY NAME="MODE" VALUE="OUTPUT"/>
+        </PROPERTIES>
+      </COMPONENT>
+    </COMPONENTS>
+    
+    <CONNECTIONS>
+      <!-- Full Adder Logic Connections -->
+      
+      <!-- A XOR B -->
+      <WIRE FROM="INPUT_A.OUT" TO="XOR1.IN1"/>
+      <WIRE FROM="INPUT_B.OUT" TO="XOR1.IN2"/>
+      
+      <!-- (A XOR B) XOR Ci = Sum -->
+      <WIRE FROM="XOR1.OUT" TO="XOR2.IN1"/>
+      <WIRE FROM="INPUT_CI.OUT" TO="XOR2.IN2"/>
+      <WIRE FROM="XOR2.OUT" TO="OUTPUT_OF.IN"/>
+      
+      <!-- A AND B -->
+      <WIRE FROM="INPUT_A.OUT" TO="AND1.IN1"/>
+      <WIRE FROM="INPUT_B.OUT" TO="AND1.IN2"/>
+      
+      <!-- Ci AND (A XOR B) -->
+      <WIRE FROM="INPUT_CI.OUT" TO="AND2.IN1"/>
+      <WIRE FROM="XOR1.OUT" TO="AND2.IN2"/>
+      
+      <!-- (A AND B) OR (Ci AND (A XOR B)) = Carry -->
+      <WIRE FROM="AND1.OUT" TO="OR1.IN1"/>
+      <WIRE FROM="AND2.OUT" TO="OR1.IN2"/>
+      <WIRE FROM="OR1.OUT" TO="OUTPUT_CF.IN"/>
+    </CONNECTIONS>
+  </SCHEMATIC>
+  
+  <SIMULATION>
+    <SETTINGS>
+      <PROPERTY NAME="STEP_TIME" VALUE="1ms"/>
+      <PROPERTY NAME="END_TIME" VALUE="100ms"/>
+      <PROPERTY NAME="LOGIC_FAMILY" VALUE="TTL"/>
+    </SETTINGS>
+    
+    <STIMULUS>
+      <!-- Test vectors for full adder truth table -->
+      <VECTOR TIME="0ms" A="0" B="0" CI="0"/>
+      <VECTOR TIME="10ms" A="0" B="0" CI="1"/>
+      <VECTOR TIME="20ms" A="0" B="1" CI="0"/>
+      <VECTOR TIME="30ms" A="0" B="1" CI="1"/>
+      <VECTOR TIME="40ms" A="1" B="0" CI="0"/>
+      <VECTOR TIME="50ms" A="1" B="0" CI="1"/>
+      <VECTOR TIME="60ms" A="1" B="1" CI="0"/>
+      <VECTOR TIME="70ms" A="1" B="1" CI="1"/>
+    </STIMULUS>
+  </SIMULATION>
+  
+  <VERIFICATION>
+    <!-- Expected outputs for truth table verification -->
+    <TRUTH_TABLE>
+      <ROW A="0" B="0" CI="0" SUM="0" CARRY="0"/>
+      <ROW A="0" B="0" CI="1" SUM="1" CARRY="0"/>
+      <ROW A="0" B="1" CI="0" SUM="1" CARRY="0"/>
+      <ROW A="0" B="1" CI="1" SUM="0" CARRY="1"/>
+      <ROW A="1" B="0" CI="0" SUM="1" CARRY="0"/>
+      <ROW A="1" B="0" CI="1" SUM="0" CARRY="1"/>
+      <ROW A="1" B="1" CI="0" SUM="0" CARRY="1"/>
+      <ROW A="1" B="1" CI="1" SUM="1" CARRY="1"/>
+    </TRUTH_TABLE>
+  </VERIFICATION>
+</PROJECT>

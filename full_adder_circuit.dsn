@@ -1,0 +1,89 @@
+ISIS SCHEMATIC FILE  Format 5.0  (c) Labcenter Electronics
+
+DESIGN: Full Adder Circuit
+DATE: 2024
+TIME: 12:00:00
+REVISION: 1.0
+AUTHOR: Circuit Designer
+
+COMPONENT_LIST:
+; Input components
+INPUT_A: LOGIC INPUT (A)
+INPUT_B: LOGIC INPUT (B) 
+INPUT_CI: LOGIC INPUT (Ci)
+
+; Logic Gates
+XOR1: XOR GATE (2-input)
+XOR2: XOR GATE (2-input)
+AND1: AND GATE (2-input)
+AND2: AND GATE (2-input)
+OR1: OR GATE (2-input)
+
+; Output components
+OUTPUT_CF: LOGIC OUTPUT (CF - Carry Flag)
+OUTPUT_OF: LOGIC OUTPUT (OF - Output Flag/Sum)
+
+CONNECTIONS:
+; Full Adder Logic Implementation
+; Sum = A XOR B XOR Ci
+; Carry = (A AND B) OR (Ci AND (A XOR B))
+
+; First XOR gate: A XOR B
+INPUT_A -> XOR1.PIN1
+INPUT_B -> XOR1.PIN2
+XOR1.OUT -> NODE_AB_XOR
+
+; Second XOR gate: (A XOR B) XOR Ci = Sum
+NODE_AB_XOR -> XOR2.PIN1
+INPUT_CI -> XOR2.PIN2
+XOR2.OUT -> OUTPUT_OF
+
+; First AND gate: A AND B
+INPUT_A -> AND1.PIN1
+INPUT_B -> AND1.PIN2
+AND1.OUT -> NODE_AB_AND
+
+; Second AND gate: Ci AND (A XOR B)
+INPUT_CI -> AND2.PIN1
+NODE_AB_XOR -> AND2.PIN2
+AND2.OUT -> NODE_CI_AB_AND
+
+; OR gate: (A AND B) OR (Ci AND (A XOR B)) = Carry
+NODE_AB_AND -> OR1.PIN1
+NODE_CI_AB_AND -> OR1.PIN2
+OR1.OUT -> OUTPUT_CF
+
+COORDINATES:
+; Component positions (in grid units)
+INPUT_A: (100, 200)
+INPUT_B: (100, 300)
+INPUT_CI: (100, 400)
+
+XOR1: (300, 250)
+AND1: (300, 350)
+AND2: (500, 350)
+XOR2: (700, 250)
+OR1: (700, 350)
+
+OUTPUT_OF: (900, 250)
+OUTPUT_CF: (900, 350)
+
+PROPERTIES:
+; Circuit properties
+LOGIC_FAMILY: TTL
+SUPPLY_VOLTAGE: 5V
+GROUND: 0V
+TEMPERATURE: 25C
+
+; Truth Table Verification:
+; A | B | Ci | Sum(OF) | Carry(CF)
+; 0 | 0 | 0  |    0    |    0
+; 0 | 0 | 1  |    1    |    0  
+; 0 | 1 | 0  |    1    |    0
+; 0 | 1 | 1  |    0    |    1
+; 1 | 0 | 0  |    1    |    0
+; 1 | 0 | 1  |    0    |    1
+; 1 | 1 | 0  |    0    |    1
+; 1 | 1 | 1  |    1    |    1
+
+END_DESIGN
